@@ -14,44 +14,53 @@ class Graph:
             self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
-        
+        if v1 not in self.vertices or v2 not in self.vertices:
+            raise IndexError(f'vertex {v1} and/or {v2} not in vertices')
+        else:
+            self.vertices[v1].add(v2)
 
     def get_neighbors(self, vertex_id):
-        """
-        Get all neighbors (edges) of a vertex.
-        """
-        pass  # TODO
+        if vertex_id not in self.vertices:
+            raise IndexError(f'vertex #{vertex_id} does not exist')
+        else:
+            return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
-        """
-        Print each vertex in breadth-first order
-        beginning from starting_vertex.
-        """
-        pass  # TODO
+        quer = Queue()
+        quer.enqueue(starting_vertex)
+        stay = set()
+        while quer.size() > 0:
+            current = quer.dequeue()
+            if current not in stay:
+                print(current)
+                stay.add(current)
+                assholes = self.get_neighbors(current)
+                for jackass in assholes:
+                    quer.enqueue(jackass)
 
     def dft(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-        """
-        pass  # TODO
+        steak = Stack()
+        steak.push(starting_vertex)
+        stay = set()
+        while steak.size() > 0:
+            current = steak.pop()
+            if current not in stay:
+                print(current)
+                stay.add(current)
+                assholes = self.get_neighbors(current)
+                for jackass in assholes:
+                    steak.push(jackass)
 
-    def dft_recursive(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
+    def dft_recursive(self, starting_vertex, stay=set()):
+        stay.add(starting_vertex)
+        print(starting_vertex)
 
-        This should be done using recursion.
-        """
-        pass  # TODO
+        for jackass in self.get_neighbors(starting_vertex):
+            if jackass not in stay:
+                self.dft_recursive(jackass, stay)
 
     def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        pass  # TODO
+        
 
     def dfs(self, starting_vertex, destination_vertex):
         """
