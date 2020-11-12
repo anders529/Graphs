@@ -10,16 +10,11 @@ class Graph:
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
-        """
-        Add a vertex to the graph.
-        """
-        pass  # TODO
+        if vertex_id in self.vertices:
+            self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
-        """
-        Add a directed edge to the graph.
-        """
-        pass  # TODO
+        
 
     def get_neighbors(self, vertex_id):
         """
