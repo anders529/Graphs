@@ -4,13 +4,15 @@ Simple graph implementation
 from util import Stack, Queue  # These may come in handy
 
 class Graph:
-
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
+
     def __init__(self):
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
         if vertex_id in self.vertices:
+            raise KeyError(f'vertex {vertex_id} has already been added')
+        else:
             self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
@@ -21,22 +23,22 @@ class Graph:
 
     def get_neighbors(self, vertex_id):
         if vertex_id not in self.vertices:
-            raise IndexError(f'vertex #{vertex_id} does not exist')
+            raise IndexError(f'vertex {vertex_id} does not exist')
         else:
             return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
-        quer = Queue()
-        quer.enqueue(starting_vertex)
+        qsm = Queue()
+        qsm.enqueue(starting_vertex)
         stay = set()
-        while quer.size() > 0:
-            current = quer.dequeue()
+        while qsm.size() > 0:
+            current = qsm.dequeue()
             if current not in stay:
                 print(current)
                 stay.add(current)
                 assholes = self.get_neighbors(current)
-                for jackass in assholes:
-                    quer.enqueue(jackass)
+                for dick in assholes:
+                    qsm.enqueue(dick)
 
     def dft(self, starting_vertex):
         steak = Stack()
@@ -48,37 +50,61 @@ class Graph:
                 print(current)
                 stay.add(current)
                 assholes = self.get_neighbors(current)
-                for jackass in assholes:
-                    steak.push(jackass)
+                for dick in assholes:
+                    steak.push(dick)
 
     def dft_recursive(self, starting_vertex, stay=set()):
         stay.add(starting_vertex)
         print(starting_vertex)
-
-        for jackass in self.get_neighbors(starting_vertex):
-            if jackass not in stay:
-                self.dft_recursive(jackass, stay)
+        for dick in self.get_neighbors(starting_vertex):
+            if dick not in stay:
+                self.dft_recursive(dick, stay)
 
     def bfs(self, starting_vertex, destination_vertex):
-        
+        qsm = Queue()
+        qsm.enqueue([starting_vertex])
+        stay = set()
+        while qsm.size() > 0:
+            current = qsm.dequeue()
+            vertex = current[-1]
+            if vertex not in stay:
+                if vertex == destination_vertex:
+                    return current
+                stay.add(vertex)
+                for dick in self.get_neighbors(vertex):
+                    paths = current.copy()
+                    paths.append(dick)
+                    qsm.enqueue(paths)
 
     def dfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-        """
-        pass  # TODO
+        steak = Stack()
+        steak.push([starting_vertex])
+        stay = set()
+        while steak.size() > 0:
+            current = steak.pop()
+            vertex = current[-1]
+            if vertex not in stay:
+                if vertex == destination_vertex:
+                    return current
+                stay.add(vertex)
+                for dick in self.get_neighbors(vertex):
+                    path = current.copy()
+                    path.append(dick)
+                    steak.push(path)
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-
-        This should be done using recursion.
-        """
-        pass  # TODO
+    def dfs_recursive(self, vertex, destination_vertex, paths=[], stay=set()):
+        stay.add(vertex)
+        if vertex == destination_vertex:
+            return paths
+        if len(paths) == 0:
+            paths.append(vertex)
+        assholes = self.get_neighbors(vertex)
+        for dick in assholes:
+            if dick not in stay:
+                results = self.dfs_recursive(
+                    dick, destination_vertex, paths + [dick], stay)
+                if results is not None:
+                    return results
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
