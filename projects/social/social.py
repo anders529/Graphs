@@ -44,7 +44,6 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # Add users
         for i in range(0, num_users):
@@ -52,7 +51,19 @@ class SocialGraph:
 
         # Create friendships
         possible_friendships = []
+
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+            random.shuffle(possible_friendships)
         
+        N = num_users * avg_friendships // 2
+
+        for i in range(N):
+            friendship = possible_friendships[i]
+            user_id = friendship[0]
+            friend_id = friendship[1]
+            self.add_friendship(user_id, friend_id)
 
     def get_all_social_paths(self, user_id):
         """
@@ -65,8 +76,18 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
-        return visited
+        visited = {}
+        queue = [user_id]
+        visited[user_id] = [user_id]
 
+        while len(queue) > 0:
+            node = queue.pop()
+            friends = self.friendships[node]
+            for friend in friends:
+                if not friend in visited:
+                    visited[friend] = visited[node] + [friend]
+                    queue.append(friend)
+        return visited
 
 if __name__ == '__main__':
     sg = SocialGraph()
